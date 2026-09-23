@@ -1,0 +1,21 @@
+# ── AI agent configuration: versioned in the SCAFFOLD repo with `git add -f`,
+#    but NEVER delivered in the exam repo (copy the scaffold → these stay out). ──
+.claude/
+.agents/
+
+# ── Secrets: only .env.example is committed ──
+.env
+
+# ── Build output ──
+BE/target/
+FE/node_modules/
+FE/dist/
+FE/.angular/
+
+# ── IDE / OS ──
+.idea/
+*.iml
+.vscode/
+!FE/.vscode/
+.DS_Store
+Thumbs.db
