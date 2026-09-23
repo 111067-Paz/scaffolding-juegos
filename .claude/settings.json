@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(./mvnw:*)",
+      "Bash(mvn:*)",
+      "Bash(npm:*)",
+      "Bash(npx ng:*)",
+      "Bash(bash scripts/audit.sh)",
+      "Bash(bash scripts/verify.sh)",
+      "Bash(bash scripts/sync-agents.sh)",
+      "Bash(docker compose:*)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)"
+    ],
+    "deny": [
+      "Bash(git push --force:*)",
+      "Bash(git push -f:*)",
+      "Bash(git reset --hard:*)",
+      "Bash(rm -rf /:*)",
+      "Read(./.env)"
+    ]
+  }
+}
