@@ -1,0 +1,43 @@
+<section class="mx-auto flex min-h-[70vh] max-w-md flex-col justify-center px-4 py-8" aria-labelledby="login-heading">
+  <h1 id="login-heading" class="mb-6 text-2xl font-bold text-slate-900">Iniciar sesión</h1>
+
+  @if (errorMessage(); as message) {
+    <p role="alert" class="mb-4 rounded-lg bg-red-50 px-4 py-3 text-red-700">{{ message }}</p>
+  }
+
+  <form [formGroup]="loginForm" (ngSubmit)="submit()" class="flex flex-col gap-4" novalidate>
+    @let username = loginForm.controls.username;
+    <label class="block">
+      <span class="mb-1 block text-sm font-medium text-slate-700">Usuario</span>
+      <input type="text" formControlName="username" autocomplete="username"
+             class="w-full rounded-lg border border-slate-300 px-3 py-2 focus-visible:ring-2 focus-visible:ring-indigo-400"
+             [class.border-red-500]="username.touched && username.invalid"
+             [attr.aria-invalid]="username.touched && username.invalid" />
+      @if (username.touched && username.invalid) {
+        <p role="alert" class="mt-1 text-sm text-red-600">El usuario es obligatorio.</p>
+      }
+    </label>
+
+    @let password = loginForm.controls.password;
+    <label class="block">
+      <span class="mb-1 block text-sm font-medium text-slate-700">Contraseña</span>
+      <input type="password" formControlName="password" autocomplete="current-password"
+             class="w-full rounded-lg border border-slate-300 px-3 py-2 focus-visible:ring-2 focus-visible:ring-indigo-400"
+             [class.border-red-500]="password.touched && password.invalid"
+             [attr.aria-invalid]="password.touched && password.invalid" />
+      @if (password.touched && password.invalid) {
+        <p role="alert" class="mt-1 text-sm text-red-600">La contraseña es obligatoria.</p>
+      }
+    </label>
+
+    <button type="submit" [disabled]="submitting()"
+            class="mt-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 focus-visible:ring-2 focus-visible:ring-indigo-400 disabled:opacity-50">
+      @if (submitting()) { Ingresando… } @else { Ingresar }
+    </button>
+
+    <p class="text-center text-sm text-slate-600">
+      ¿No tenés cuenta?
+      <a routerLink="/register" class="font-medium text-indigo-600 hover:underline focus-visible:ring-2 focus-visible:ring-indigo-400">Registrate</a>
+    </p>
+  </form>
+</section>

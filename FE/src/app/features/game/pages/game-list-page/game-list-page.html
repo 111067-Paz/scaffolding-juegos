@@ -1,0 +1,33 @@
+<section class="mx-auto max-w-3xl px-4 py-8" aria-labelledby="games-heading">
+  <div class="mb-6 flex items-center justify-between gap-4">
+    <h1 id="games-heading" class="text-2xl font-bold text-slate-900">Mis partidas</h1>
+    <a routerLink="/games/new"
+       class="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 focus-visible:ring-2 focus-visible:ring-indigo-400">
+      Nueva partida
+    </a>
+  </div>
+
+  @if (games.isLoading()) {
+    <p class="text-slate-500" aria-live="polite">Cargando partidas…</p>
+  } @else if (errorMessage(); as message) {
+    <p role="alert" class="rounded-lg bg-red-50 px-4 py-3 text-red-700">{{ message }}</p>
+  } @else {
+    <ul class="flex flex-col gap-2">
+      @for (game of games.value() ?? []; track game.id) {
+        <li>
+          <a [routerLink]="['/games', game.id]"
+             class="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-slate-200 bg-white px-4 py-3 hover:border-indigo-400 focus-visible:ring-2 focus-visible:ring-indigo-400">
+            <span class="font-medium">Partida #{{ game.id }} · {{ game.board_size }} casillas</span>
+            <span class="text-sm text-slate-600">
+              {{ statusLabel[game.status] }}
+              @if (game.winner_name) { · ganó {{ game.winner_name }} }
+              · {{ game.created_at }}
+            </span>
+          </a>
+        </li>
+      } @empty {
+        <li class="text-slate-500">Todavía no creaste ninguna partida.</li>
+      }
+    </ul>
+  }
+</section>

@@ -1,0 +1,26 @@
+<ol class="grid grid-cols-5 gap-2 sm:grid-cols-8 lg:grid-cols-10" aria-label="Tablero">
+  @for (cell of cellViews(); track cell.position) {
+    <li
+      class="relative flex aspect-square flex-col justify-between rounded-lg border-2 p-1 text-xs"
+      [class]="cell.css"
+      [attr.aria-label]="cell.ariaLabel"
+    >
+      <span class="flex items-center justify-between font-semibold text-slate-500">
+        <span>{{ cell.position }}</span>
+        <span aria-hidden="true">{{ cell.icon }}</span>
+      </span>
+      <span class="flex flex-wrap gap-0.5" aria-hidden="true">
+        @for (player of cell.players; track player.id) {
+          <span
+            class="size-3 rounded-full ring-1 ring-white"
+            [class]="colors[player.turn_order]"
+            [class.opacity-30]="!player.alive"
+            [title]="player.name"
+          ></span>
+        }
+      </span>
+    </li>
+  } @empty {
+    <li class="col-span-full text-slate-500">El tablero está vacío.</li>
+  }
+</ol>

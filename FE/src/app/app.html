@@ -1,0 +1,28 @@
+<a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:rounded focus:bg-white focus:px-3 focus:py-1">
+  Saltar al contenido
+</a>
+<header class="border-b border-slate-200 bg-white">
+  <nav class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3" aria-label="Navegación principal">
+    <a routerLink="/games" class="text-lg font-bold text-indigo-700">🎲 Carrera de dados</a>
+    <ul class="flex items-center gap-4 text-sm">
+      @if (isLoggedIn()) {
+        <li>
+          <a routerLink="/games" routerLinkActive="font-semibold text-indigo-700" [routerLinkActiveOptions]="{ exact: true }"
+             class="text-slate-600 hover:text-indigo-700 focus-visible:ring-2 focus-visible:ring-indigo-400">Mis partidas</a>
+        </li>
+        <li class="text-slate-500">{{ currentUser()?.username }}</li>
+        <li>
+          <button type="button" (click)="logout()"
+                  class="text-slate-600 hover:text-indigo-700 focus-visible:ring-2 focus-visible:ring-indigo-400">Salir</button>
+        </li>
+      } @else {
+        <li><a routerLink="/login" class="text-slate-600 hover:text-indigo-700 focus-visible:ring-2 focus-visible:ring-indigo-400">Ingresar</a></li>
+        <li><a routerLink="/register" class="text-slate-600 hover:text-indigo-700 focus-visible:ring-2 focus-visible:ring-indigo-400">Registrarse</a></li>
+      }
+    </ul>
+  </nav>
+</header>
+
+<main id="main" class="min-h-screen bg-slate-50">
+  <router-outlet />
+</main>

@@ -1,0 +1,57 @@
+<section class="mx-auto max-w-md px-4 py-8" aria-labelledby="new-game-heading">
+  <h1 id="new-game-heading" class="mb-6 text-2xl font-bold text-slate-900">Nueva partida</h1>
+
+  @if (errorMessage(); as message) {
+    <p role="alert" class="mb-4 rounded-lg bg-red-50 px-4 py-3 text-red-700">{{ message }}</p>
+  }
+
+  <form [formGroup]="gameForm" (ngSubmit)="submit()" class="flex flex-col gap-4" novalidate>
+    <fieldset class="flex flex-col gap-3" formArrayName="playerNames">
+      <legend class="mb-1 text-sm font-medium text-slate-700">Jugadores ({{ minPlayers }} a {{ maxPlayers }})</legend>
+      @for (control of gameForm.controls.playerNames.controls; track control; let index = $index) {
+        <div>
+          <div class="flex gap-2">
+            <input type="text" [formControlName]="index" [attr.aria-label]="'Nombre del jugador ' + (index + 1)"
+                   class="w-full rounded-lg border border-slate-300 px-3 py-2 focus-visible:ring-2 focus-visible:ring-indigo-400"
+                   [class.border-red-500]="control.touched && control.invalid"
+                   [attr.aria-invalid]="control.touched && control.invalid" />
+            <button type="button" (click)="removePlayer(index)"
+                    [disabled]="gameForm.controls.playerNames.length <= minPlayers"
+                    [attr.aria-label]="'Quitar jugador ' + (index + 1)"
+                    class="rounded-lg border border-slate-300 px-3 text-slate-600 hover:bg-slate-100 focus-visible:ring-2 focus-visible:ring-indigo-400 disabled:opacity-40">
+              ✕
+            </button>
+          </div>
+          @if (control.touched && control.invalid) {
+            <p role="alert" class="mt-1 text-sm text-red-600">De 2 a 30 letras, números o espacios.</p>
+          }
+        </div>
+      }
+      <button type="button" (click)="addPlayer()"
+              [disabled]="gameForm.controls.playerNames.length >= maxPlayers"
+              class="self-start text-sm font-medium text-indigo-600 hover:underline focus-visible:ring-2 focus-visible:ring-indigo-400 disabled:opacity-40">
+        + Agregar jugador
+      </button>
+    </fieldset>
+
+    @let boardSize = gameForm.controls.boardSize;
+    <label class="block">
+      <span class="mb-1 block text-sm font-medium text-slate-700">Casillas del tablero (10 a 60)</span>
+      <input type="number" formControlName="boardSize" min="10" max="60"
+             class="w-full rounded-lg border border-slate-300 px-3 py-2 focus-visible:ring-2 focus-visible:ring-indigo-400"
+             [class.border-red-500]="boardSize.touched && boardSize.invalid"
+             [attr.aria-invalid]="boardSize.touched && boardSize.invalid" />
+      @if (boardSize.touched && boardSize.invalid) {
+        <p role="alert" class="mt-1 text-sm text-red-600">Elegí un tamaño entre 10 y 60.</p>
+      }
+    </label>
+
+    <div class="flex gap-2">
+      <button type="submit" [disabled]="submitting()"
+              class="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 focus-visible:ring-2 focus-visible:ring-indigo-400 disabled:opacity-50">
+        @if (submitting()) { Creando… } @else { Crear partida }
+      </button>
+      <a routerLink="/games" class="rounded-lg px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 focus-visible:ring-2 focus-visible:ring-indigo-400">Cancelar</a>
+    </div>
+  </form>
+</section>

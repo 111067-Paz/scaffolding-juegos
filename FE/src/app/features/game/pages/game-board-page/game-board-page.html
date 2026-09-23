@@ -1,0 +1,48 @@
+<section class="mx-auto max-w-6xl px-4 py-6" aria-labelledby="board-heading">
+  <a routerLink="/games" class="text-sm text-indigo-600 hover:underline focus-visible:ring-2 focus-visible:ring-indigo-400">← Mis partidas</a>
+
+  @if (game.isLoading() && !game.hasValue()) {
+    <p class="mt-4 text-slate-500" aria-live="polite">Cargando partida…</p>
+  } @else if (loadError(); as message) {
+    <p role="alert" class="mt-4 rounded-lg bg-red-50 px-4 py-3 text-red-700">{{ message }}</p>
+  } @else if (game.value(); as current) {
+    <header class="my-4 flex flex-wrap items-center justify-between gap-2">
+      <h1 id="board-heading" class="text-2xl font-bold text-slate-900">Partida #{{ current.id }}</h1>
+      <p class="rounded-full bg-slate-200 px-3 py-1 text-sm" aria-live="polite">
+        {{ statusLabel[current.status] }}
+        @if (winner(); as champion) { · ¡Ganó {{ champion.name }}! }
+      </p>
+    </header>
+
+    @if (actionError(); as message) {
+      <p role="alert" class="mb-4 rounded-lg bg-red-50 px-4 py-3 text-red-700">{{ message }}</p>
+    }
+
+    <div class="grid gap-6 lg:grid-cols-[1fr_18rem]">
+      <app-board-grid [cells]="current.cells" [players]="current.players" />
+
+      <aside class="flex flex-col gap-4">
+        @switch (current.status) {
+          @case ('WAITING') {
+            <button type="button" (click)="start()" [disabled]="busy()"
+                    class="rounded-lg bg-emerald-600 px-4 py-2 font-medium text-white hover:bg-emerald-700 focus-visible:ring-2 focus-visible:ring-emerald-400 disabled:opacity-50">
+              Empezar partida
+            </button>
+          }
+          @case ('IN_PROGRESS') {
+            <app-dice-panel [playerName]="currentPlayer()?.name ?? ''" [lastValue]="lastDice()"
+                            [disabled]="busy()" (roll)="roll()" />
+          }
+        }
+        <app-player-panel [players]="current.players" [currentPlayerId]="current.current_player_id"
+                          [winnerId]="current.winner_id" />
+        <h2 class="text-sm font-semibold text-slate-700">Historial</h2>
+        @defer (on idle) {
+          <app-move-history [moves]="moves.value() ?? []" />
+        } @placeholder {
+          <p class="text-sm text-slate-500">Cargando historial…</p>
+        }
+      </aside>
+    </div>
+  }
+</section>
