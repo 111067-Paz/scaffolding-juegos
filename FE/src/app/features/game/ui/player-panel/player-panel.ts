@@ -12,6 +12,7 @@ import { PLAYER_COLORS } from '../player-colors';
         <li
           class="flex items-center justify-between rounded-lg border bg-white px-3 py-2"
           [class.border-indigo-500]="player.id === currentPlayerId()"
+          [class.border-slate-200]="player.id !== currentPlayerId()"
           [class.opacity-50]="!player.alive"
           [attr.aria-current]="player.id === currentPlayerId() ? 'step' : null"
         >

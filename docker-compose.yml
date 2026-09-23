@@ -1,0 +1,55 @@
+# Full stack: PostgreSQL + Spring Boot (profile "docker") + Angular behind Nginx.
+#   cp .env.example .env      (first time only)
+#   docker compose up --build -d
+#   open http://localhost:${FE_PORT:-4200}
+name: p4-parcial
+
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-p4}
+      POSTGRES_USER: ${POSTGRES_USER:-p4}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-p4}
+    volumes:
+      - pgdata:/var/lib/postgresql/data   # games survive `docker compose down` (not `down -v`)
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  backend:
+    build: ./BE
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      DB_HOST: db
+      POSTGRES_DB: ${POSTGRES_DB:-p4}
+      POSTGRES_USER: ${POSTGRES_USER:-p4}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-p4}
+      APP_JWT_SECRET: ${APP_JWT_SECRET:?Set APP_JWT_SECRET in .env (copy .env.example)}
+      APP_JWT_EXPIRATION_MINUTES: ${APP_JWT_EXPIRATION_MINUTES:-60}
+      APP_AUTH_COOKIE_SECURE: "false"   # plain HTTP on localhost
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/actuator/health/readiness | grep -q UP"]
+      interval: 10s
+      timeout: 3s
+      retries: 12
+      start_period: 20s
+    # Uncomment to call the API directly (Postman, Swagger UI at /swagger-ui/index.html):
+    # ports:
+    #   - "8080:8080"
+
+  frontend:
+    build: ./FE
+    ports:
+      - "${FE_PORT:-4200}:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+
+volumes:
+  pgdata:
