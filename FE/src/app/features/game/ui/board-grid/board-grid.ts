@@ -1,4 +1,4 @@
-import { Component, computed, input } from '@angular/core';
+import { Component, computed, input, ChangeDetectionStrategy } from '@angular/core';
 
 import { CELL_META, Cell, Player } from '../../data-access/game.models';
 import { PLAYER_COLORS } from '../player-colors';
@@ -19,6 +19,7 @@ interface CellView {
  */
 @Component({
   selector: 'app-board-grid',
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './board-grid.html',
 })
 export class BoardGrid {

@@ -1,12 +1,16 @@
-import { Component, input } from '@angular/core';
+import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 
 import { CELL_META, Move } from '../../data-access/game.models';
 
 /** Dumb component: move history. Dates are shown exactly as the backend formatted them. */
 @Component({
   selector: 'app-move-history',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
-    <ol class="flex max-h-72 flex-col gap-1 overflow-y-auto text-sm" aria-label="Historial de movimientos">
+    <ol
+      class="flex max-h-72 flex-col gap-1 overflow-y-auto text-sm"
+      aria-label="Historial de movimientos"
+    >
       @for (move of moves(); track move.id) {
         <li class="rounded bg-white px-3 py-1.5">
           <strong>{{ move.player_name }}</strong> sacó {{ move.dice_value }}:

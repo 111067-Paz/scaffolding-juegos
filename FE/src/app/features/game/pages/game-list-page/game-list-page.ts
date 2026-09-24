@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, ChangeDetectionStrategy } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { extractErrorMessage } from '../../../../core/http/api-error';
@@ -9,12 +9,15 @@ import { GameService } from '../../data-access/game.service';
 @Component({
   selector: 'app-game-list-page',
   imports: [RouterLink],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './game-list-page.html',
 })
 export class GameListPage {
   private readonly gameService = inject(GameService);
 
   readonly games = this.gameService.myGamesResource();
-  readonly errorMessage = computed(() => (this.games.error() ? extractErrorMessage(this.games.error()) : null));
+  readonly errorMessage = computed(() =>
+    this.games.error() ? extractErrorMessage(this.games.error()) : null,
+  );
   readonly statusLabel = STATUS_LABEL;
 }

@@ -1,4 +1,12 @@
-import { Component, DestroyRef, computed, inject, input, signal } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  computed,
+  inject,
+  input,
+  signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 
@@ -20,6 +28,7 @@ import { PlayerPanel } from '../../ui/player-panel/player-panel';
 @Component({
   selector: 'app-game-board-page',
   imports: [RouterLink, BoardGrid, DicePanel, PlayerPanel, MoveHistory],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './game-board-page.html',
 })
 export class GameBoardPage {
@@ -37,7 +46,9 @@ export class GameBoardPage {
   readonly lastDice = signal<number | null>(null);
 
   readonly statusLabel = STATUS_LABEL;
-  readonly loadError = computed(() => (this.game.error() ? extractErrorMessage(this.game.error()) : null));
+  readonly loadError = computed(() =>
+    this.game.error() ? extractErrorMessage(this.game.error()) : null,
+  );
   readonly currentPlayer = computed(() => {
     const game = this.game.value();
     return game?.players.find((player) => player.id === game.current_player_id) ?? null;
@@ -48,7 +59,10 @@ export class GameBoardPage {
   });
 
   start(): void {
-    this.runCommand(() => this.gameService.start(this.gameId()), (game) => this.game.set(game));
+    this.runCommand(
+      () => this.gameService.start(this.gameId()),
+      (game) => this.game.set(game),
+    );
   }
 
   roll(): void {

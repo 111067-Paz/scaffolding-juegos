@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { Component, DestroyRef, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   AbstractControl,
@@ -27,6 +27,7 @@ export const PASSWORD_PATTERN = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/;
 @Component({
   selector: 'app-register-page',
   imports: [ReactiveFormsModule, RouterLink],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './register-page.html',
 })
 export class RegisterPage {
@@ -50,7 +51,11 @@ export class RegisterPage {
       }),
       email: new FormControl('', {
         nonNullable: true,
-        validators: [Validators.required, Validators.maxLength(120), Validators.pattern(EMAIL_PATTERN)],
+        validators: [
+          Validators.required,
+          Validators.maxLength(120),
+          Validators.pattern(EMAIL_PATTERN),
+        ],
       }),
       password: new FormControl('', {
         nonNullable: true,
@@ -61,7 +66,10 @@ export class RegisterPage {
           Validators.pattern(PASSWORD_PATTERN),
         ],
       }),
-      confirmPassword: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
+      confirmPassword: new FormControl('', {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
     },
     { validators: passwordsMatchValidator },
   );

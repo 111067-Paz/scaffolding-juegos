@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-not-found-page',
   imports: [RouterLink],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <section class="mx-auto max-w-md px-4 py-16 text-center" aria-labelledby="not-found-heading">
       <h1 id="not-found-heading" class="mb-2 text-3xl font-bold text-slate-900">404</h1>

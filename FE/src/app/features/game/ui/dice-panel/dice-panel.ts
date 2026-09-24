@@ -1,4 +1,4 @@
-import { Component, input, output } from '@angular/core';
+import { Component, input, output, ChangeDetectionStrategy } from '@angular/core';
 
 /**
  * Dumb component: shows the last die value and emits "roll" — it does not know
@@ -6,12 +6,19 @@ import { Component, input, output } from '@angular/core';
  */
 @Component({
   selector: 'app-dice-panel',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
-    <section class="flex flex-col items-center gap-3 rounded-xl bg-white p-4 shadow-sm" aria-label="Dado">
+    <section
+      class="flex flex-col items-center gap-3 rounded-xl bg-white p-4 shadow-sm"
+      aria-label="Dado"
+    >
       <p class="text-sm text-slate-600">
         Turno de <strong class="text-slate-900">{{ playerName() }}</strong>
       </p>
-      <p class="flex size-16 items-center justify-center rounded-xl border-2 border-slate-300 text-3xl font-bold" aria-live="polite">
+      <p
+        class="flex size-16 items-center justify-center rounded-xl border-2 border-slate-300 text-3xl font-bold"
+        aria-live="polite"
+      >
         {{ lastValue() ?? '–' }}
       </p>
       <button
